@@ -3,13 +3,20 @@
 	"license": "MIT",
 	"type": "module",
 	"scripts": {
+		"start": "node src/index.ts",
+		"dev": "node --watch src/index.ts",
+		"test": "vp test run",
 		"prepare": "vp config",
 		"fmt": "vp fmt",
 		"lint": "vp lint"
 	},
+	"dependencies": {
+		"express": "^5.2.1"
+	},
 	"devDependencies": {
 		"@commitlint/cli": "^21.2.1",
 		"@kekkon-nexus/config": "2.260727.5",
+		"@types/express": "^5.0.6",
 		"@types/node": "^26.1.1",
 		"husky": "^9.1.7",
 		"oxfmt": ">=0.60.0 <1",
