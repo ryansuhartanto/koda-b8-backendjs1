@@ -4,12 +4,12 @@ import type { RequestHandler } from "express";
 
 import * as User from "../models/user.ts";
 
-export const getAll: RequestHandler = (_req, res) => {
-	res.json(User.findAll());
+export const getAll: RequestHandler = async (_req, res) => {
+	res.json(await User.findAll());
 };
 
-export const getId: RequestHandler<{ id: number }> = (req, res) => {
-	const user = User.findById(req.params.id);
+export const getId: RequestHandler<{ id: number }> = async (req, res) => {
+	const user = await User.findById(req.params.id);
 
 	if (!user) {
 		res
@@ -21,7 +21,7 @@ export const getId: RequestHandler<{ id: number }> = (req, res) => {
 	res.json(user);
 };
 
-export const post: RequestHandler = (req, res) => {
+export const post: RequestHandler = async (req, res) => {
 	const { name, email, password } = req.body as Partial<User.User>;
 
 	if (!name || !email || !password) {
@@ -31,7 +31,7 @@ export const post: RequestHandler = (req, res) => {
 		return;
 	}
 
-	if (User.findId(email) !== -1) {
+	if ((await User.findId(email)) !== -1) {
 		res
 			.status(http2.constants.HTTP_STATUS_CONFLICT)
 			.json({ error: "email already registered" });
@@ -40,12 +40,12 @@ export const post: RequestHandler = (req, res) => {
 
 	res
 		.status(http2.constants.HTTP_STATUS_CREATED)
-		.json(User.create({ name, email, password }));
+		.json(await User.create({ name, email, password }));
 };
 
-export const patch: RequestHandler<{ id: number }> = (req, res) => {
+export const patch: RequestHandler<{ id: number }> = async (req, res) => {
 	const { id } = req.params;
-	const user = User.findById(id);
+	const user = await User.findById(id);
 
 	if (!user) {
 		res
@@ -56,12 +56,12 @@ export const patch: RequestHandler<{ id: number }> = (req, res) => {
 
 	const mod = req.body as Partial<User.User>;
 
-	res.json(User.edit(id, mod));
+	res.json(await User.edit(id, mod));
 };
 
-export const del: RequestHandler<{ id: number }> = (req, res) => {
+export const del: RequestHandler<{ id: number }> = async (req, res) => {
 	const { id } = req.params;
-	const user = User.findById(id);
+	const user = await User.findById(id);
 
 	if (!user) {
 		res
@@ -70,7 +70,7 @@ export const del: RequestHandler<{ id: number }> = (req, res) => {
 		return;
 	}
 
-	User.remove(id);
+	await User.remove(id);
 
 	res.json();
 };

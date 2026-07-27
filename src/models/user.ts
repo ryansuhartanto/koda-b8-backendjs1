@@ -1,42 +1,55 @@
+import fs from "node:fs/promises";
+
 export type User = {
 	name: string;
 	email: string;
 	password: string;
 };
 
-const users: User[] = [
-	{ name: "John Doe", email: "john@example.com", password: "123" },
-	{ name: "Jane Doe", email: "jane@example.com", password: "123" },
-];
-
-export function findAll(): User[] {
-	return users;
+const file = "data.json";
+async function read(): Promise<User[]> {
+	const content = await fs.readFile(file, { encoding: "utf8" });
+	return JSON.parse(content) as User[];
+}
+async function write(data: User[]) {
+	const content = JSON.stringify(data, undefined, "\t");
+	await fs.writeFile(file, content, { encoding: "utf8" });
 }
 
-export function findById(id: number): User | undefined {
-	return users[id];
+export async function findAll(): Promise<User[]> {
+	const data = await read();
+	return data;
 }
 
-export function findId(email: string): number {
-	return users.findIndex((user) => user.email === email);
+export async function findById(id: number): Promise<User | undefined> {
+	const data = await read();
+	return data[id];
 }
 
-export function create(user: User): User {
-	users.push(user);
+export async function findId(email: string): Promise<number> {
+	const data = await read();
+	return data.findIndex((user) => user.email === email);
+}
+
+export async function create(user: User): Promise<User> {
+	const data = await read();
+	data.push(user);
+	await write(data);
 	return user;
 }
 
-export function edit(id: number, user: Partial<User>): User {
-	const old: User = users[id]!;
-	const mod = {
-		...old,
+export async function edit(id: number, user: Partial<User>): Promise<User> {
+	const data = await read();
+	data[id] = {
+		...data[id]!,
 		...user,
 	};
-	users[id] = mod;
-	return users[id];
+	await write(data);
+	return data[id];
 }
 
-export function remove(id: number): void {
-	// oxlint-disable-next-line typescript/no-dynamic-delete
-	delete users[id];
+export async function remove(id: number): Promise<void> {
+	const data = await read();
+	data.splice(id, 1);
+	await write(data);
 }
