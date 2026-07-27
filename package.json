@@ -1,6 +1,8 @@
 {
 	"name": "backendjs1",
 	"license": "MIT",
+	"author": "Ryan Suhartanto <suhartanto@kekkon.nexus>",
+	"repository": "ryansuhartanto/koda-b8-backendjs1",
 	"type": "module",
 	"scripts": {
 		"start": "node src/index.ts",
