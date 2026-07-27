@@ -4,25 +4,26 @@ import type { RequestHandler } from "express";
 
 import * as User from "../models/user.ts";
 
-type PaginationRequest = {
+type getAllRequest = {
 	page: number;
 	limit: number;
+	q?: string;
 };
 
-const paginationRequestDefault: PaginationRequest = {
+const getAllRequestDefault: getAllRequest = {
 	page: 1,
 	limit: 10,
 };
 
 export const getAll: RequestHandler = async (req, res) => {
-	const { page, limit } = {
-		...paginationRequestDefault,
-		...(req.body as Partial<PaginationRequest>),
+	const { page, limit, q } = {
+		...getAllRequestDefault,
+		...(req.body as Partial<getAllRequest>),
 	};
 
 	const offset = (page - 1) * limit;
 
-	res.json(await User.findAll(offset, limit));
+	res.json(await User.findAll(offset, limit, q));
 };
 
 export const getId: RequestHandler<{ id: number }> = async (req, res) => {

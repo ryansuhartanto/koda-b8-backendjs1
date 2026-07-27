@@ -16,8 +16,15 @@ async function write(data: User[]) {
 	await fs.writeFile(file, content, { encoding: "utf8" });
 }
 
-export async function findAll(offset: number, limit: number): Promise<User[]> {
-	const data = await read();
+export async function findAll(
+	offset: number,
+	limit: number,
+	query?: string,
+): Promise<User[]> {
+	let data = await read();
+	if (query) {
+		data = data.filter((user) => user.name.includes(query));
+	}
 	return data.slice(offset, limit);
 }
 
