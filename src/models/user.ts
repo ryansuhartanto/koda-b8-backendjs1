@@ -16,9 +16,9 @@ async function write(data: User[]) {
 	await fs.writeFile(file, content, { encoding: "utf8" });
 }
 
-export async function findAll(): Promise<User[]> {
+export async function findAll(offset: number, limit: number): Promise<User[]> {
 	const data = await read();
-	return data;
+	return data.slice(offset, limit);
 }
 
 export async function findById(id: number): Promise<User | undefined> {
