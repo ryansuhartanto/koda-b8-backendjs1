@@ -18,11 +18,13 @@
 		"lint": "vp lint"
 	},
 	"dependencies": {
+		"cors": "^2.8.6",
 		"express": "^5.2.1"
 	},
 	"devDependencies": {
 		"@commitlint/cli": "^21.2.1",
 		"@kekkon-nexus/config": "2.260727.5",
+		"@types/cors": "^2.8.19",
 		"@types/express": "^5.0.6",
 		"@types/node": "^26.1.1",
 		"eslint-plugin-no-relative-import-paths": "^1.6.1",
