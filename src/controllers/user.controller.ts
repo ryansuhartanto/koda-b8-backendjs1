@@ -35,6 +35,8 @@ export const getAll: RequestHandler = async (req, res) => {
 
 export const getId: RequestHandler<idParams> = async (req, res) => {
 	const id = Number(req.params.id);
+	const user = await User.findById(id);
+
 	if (!id) {
 		res
 			.status(http2.constants.HTTP_STATUS_NOT_FOUND)
@@ -42,7 +44,6 @@ export const getId: RequestHandler<idParams> = async (req, res) => {
 		return;
 	}
 
-	const user = await User.findById(id);
 	res.json(user);
 };
 
