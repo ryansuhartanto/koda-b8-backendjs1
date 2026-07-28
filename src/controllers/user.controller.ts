@@ -84,7 +84,7 @@ export const patch: RequestHandler<idParams> = async (req, res) => {
 	res.json(await User.edit(id, mod));
 };
 
-export const putPicture: RequestHandler<idParams> = async (req, res) => {
+export const putAvatar: RequestHandler<idParams> = async (req, res) => {
 	const id = Number(req.params.id);
 	const user = await User.findById(id);
 
