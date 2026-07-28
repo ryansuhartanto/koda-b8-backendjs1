@@ -1,13 +1,20 @@
 import http2 from "node:http2";
 
 import type { RequestHandler } from "express";
+// oxlint-disable-next-line import/no-empty-named-blocks unicorn/require-module-specifiers
+import type {} from "multer";
 
+import { getFileType, permamentize } from "#/lib/upload";
 import * as User from "#/models/user.model";
 
 type getAllRequest = {
 	page: number;
 	limit: number;
 	q?: string;
+};
+
+type idParams = {
+	id: string;
 };
 
 const getAllRequestDefault: getAllRequest = {
@@ -26,16 +33,16 @@ export const getAll: RequestHandler = async (req, res) => {
 	res.json(await User.findAll(offset, limit, q));
 };
 
-export const getId: RequestHandler<{ id: number }> = async (req, res) => {
-	const user = await User.findById(req.params.id);
-
-	if (!user) {
+export const getId: RequestHandler<idParams> = async (req, res) => {
+	const id = Number(req.params.id);
+	if (!id) {
 		res
 			.status(http2.constants.HTTP_STATUS_NOT_FOUND)
 			.json({ error: "user not found" });
 		return;
 	}
 
+	const user = await User.findById(id);
 	res.json(user);
 };
 
@@ -61,8 +68,8 @@ export const post: RequestHandler = async (req, res) => {
 		.json(await User.create({ name, email, password }));
 };
 
-export const patch: RequestHandler<{ id: number }> = async (req, res) => {
-	const { id } = req.params;
+export const patch: RequestHandler<idParams> = async (req, res) => {
+	const id = Number(req.params.id);
 	const user = await User.findById(id);
 
 	if (!user) {
@@ -75,6 +82,44 @@ export const patch: RequestHandler<{ id: number }> = async (req, res) => {
 	const mod = req.body as Partial<User.User>;
 
 	res.json(await User.edit(id, mod));
+};
+
+export const putPicture: RequestHandler<idParams> = async (req, res) => {
+	const id = Number(req.params.id);
+	const user = await User.findById(id);
+
+	if (!user) {
+		res
+			.status(http2.constants.HTTP_STATUS_NOT_FOUND)
+			.json({ error: "user not found" });
+		return;
+	}
+
+	if (!req.file) {
+		res
+			.status(http2.constants.HTTP_STATUS_BAD_REQUEST)
+			.json({ error: "file is required" });
+		return;
+	}
+
+	const fileType = await getFileType(req.file);
+
+	if (!fileType) {
+		res
+			.status(http2.constants.HTTP_STATUS_BAD_REQUEST)
+			.json({ error: "unknown file" });
+		return;
+	}
+
+	if (req.file.mimetype !== fileType.mime) {
+		res
+			.status(http2.constants.HTTP_STATUS_BAD_REQUEST)
+			.json({ error: "wrong mime type" });
+	}
+
+	await permamentize(req.file, `avatar/${id}.${fileType.ext}`);
+
+	res.json();
 };
 
 export const del: RequestHandler<{ id: number }> = async (req, res) => {
