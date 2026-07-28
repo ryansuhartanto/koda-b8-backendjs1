@@ -118,9 +118,10 @@ export const putAvatar: RequestHandler<idParams> = async (req, res) => {
 			.json({ error: "wrong mime type" });
 	}
 
-	await permamentize(req.file, `avatar/${id}.${fileType.ext}`);
+	const newPath = `avatar/${id}.${fileType.ext}`;
 
-	res.json();
+	await permamentize(req.file, newPath);
+	res.json(await User.edit(id, { avatar: newPath }));
 };
 
 export const del: RequestHandler<{ id: number }> = async (req, res) => {
