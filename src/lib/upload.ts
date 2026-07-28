@@ -23,4 +23,5 @@ export async function permamentize(
 	newPath: string,
 ): Promise<void> {
 	await fs.promises.copyFile(file.path, path.join(permamentUploadDir, newPath));
+	await fs.promises.rm(file.path);
 }
