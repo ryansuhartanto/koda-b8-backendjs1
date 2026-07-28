@@ -4,6 +4,7 @@
 	"compilerOptions": {
 		"noEmit": true,
 		"types": ["@types/node"],
+
 		"skipLibCheck": true
 	},
 	"exclude": ["./dist"]

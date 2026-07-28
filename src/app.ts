@@ -1,7 +1,7 @@
 import express from "express";
 import type { Express } from "express";
 
-import { userRouter } from "./routes/user.route.ts";
+import { userRouter } from "#/routes/user.route";
 
 export const app: Express = express();
 

@@ -4,6 +4,11 @@
 	"author": "Ryan Suhartanto <suhartanto@kekkon.nexus>",
 	"repository": "ryansuhartanto/koda-b8-backendjs1",
 	"type": "module",
+	"imports": {
+		"#/*": [
+			"./src/*.ts"
+		]
+	},
 	"scripts": {
 		"start": "vp exec node src/index.ts",
 		"dev": "vp exec node --watch src/index.ts",
@@ -20,6 +25,7 @@
 		"@kekkon-nexus/config": "2.260727.5",
 		"@types/express": "^5.0.6",
 		"@types/node": "^26.1.1",
+		"eslint-plugin-no-relative-import-paths": "^1.6.1",
 		"husky": "^9.1.7",
 		"oxfmt": ">=0.60.0 <1",
 		"oxlint": "^1.75.0",

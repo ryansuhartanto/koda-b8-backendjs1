@@ -2,7 +2,7 @@ import http2 from "node:http2";
 
 import type { RequestHandler } from "express";
 
-import * as User from "../models/user.model.ts";
+import * as User from "#/models/user.model";
 
 type getAllRequest = {
 	page: number;
